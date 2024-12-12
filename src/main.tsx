@@ -1,7 +1,7 @@
 // Visit developers.reddit.com/docs to learn Devvit!
 
 import { Devvit } from '@devvit/public-api';
-import {DateComponent} from './components/DateComponent.js';
+import {Router} from './Router.js';
 
 Devvit.configure({
   redditAPI: true,
@@ -10,35 +10,29 @@ Devvit.configure({
 });
 
 Devvit.addMenuItem({
-  label: 'Puzzle Daily: Create a post',
+  label: 'Dragon Daily: Create a post',
   location: 'subreddit',
   forUserType: 'moderator',
   async onPress(_, { reddit, ui }) {
     const currentSubreddit = await reddit.getCurrentSubreddit();
     const post = await reddit.submitPost({
-      title: 'Puzzle Daily',
+      title: 'Dragon Daily',
       subredditName: currentSubreddit.name,
       preview: (
         <vstack alignment={'middle center'} grow>
-          <text>Loading puzzle daily</text>
+          <text>Loading dragon daily</text>
         </vstack>
       ),
     });
     ui.navigateTo(post);
-    ui.showToast('Posted puzzle daily!!');
+    ui.showToast('Posted dragon daily!!');
   },
 });
 
 Devvit.addCustomPostType({
-  name: 'Puzzle Daily',
+  name: 'Dragon Daily',
   height: 'tall',
-  render: () => {
-    return (
-      <vstack gap="medium" alignment="middle center" grow>
-       <DateComponent/>
-      </vstack>
-    );
-  },
+  render: Router,
 });
 
 export default Devvit;

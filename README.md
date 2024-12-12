@@ -1,1 +1,1 @@
-# puzzle-daily-devvit
+# dragon-daily-devvit
