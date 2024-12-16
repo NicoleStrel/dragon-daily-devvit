@@ -56,7 +56,10 @@ function createPopup() {
 
     const closeButton = popup.querySelector('.close-button');
     closeButton.addEventListener('click', () => {
-        console.log("closed!")
+        window.parent?.postMessage(
+            { type: 'result', data: { timeStr: time } },
+            '*'
+          );
     });
 }
 
@@ -82,16 +85,17 @@ function createErrorMessage() {
 
 export function createTimer() {
     let startTime = Date.now();
-    const timer = document.createElement('div');
-    timer.id = 'timer';
-    timer.textContent = 'Time: 0s';
-    var container = document.querySelector('.container');
-    container.appendChild(timer);
+    const timer = document.getElementById('timer');
+    const timerText = document.createElement('p');
+    timerText.textContent = '00:00';
+    timer.appendChild(timerText);
+    const svgTime = timer.querySelector('svg');
+    svgTime.style.display = 'block';
     const updateTimer = () => {
         const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
         const minutes = String(Math.floor(elapsedTime / 60)).padStart(2, '0');
         const seconds = String(elapsedTime % 60).padStart(2, '0');
-        timer.textContent = `${minutes}:${seconds}`;
+        timerText.textContent = `${minutes}:${seconds}`;
     };
     
     const timerInterval = setInterval(updateTimer, 1000);
@@ -108,7 +112,12 @@ export function createDate(){
 
     const dateDisplay = document.createElement('div');
     dateDisplay.id = 'date';
-    dateDisplay.textContent = `Solve for today's date: ${formattedDate}`;
+    const date1 = document.createElement('p');
+    date1.textContent = "Isolate the today's date with the tiles:"; 
+    const date2 = document.createElement('p');
+    date2.textContent = `${formattedDate}`;
+    dateDisplay.appendChild(date1);
+    dateDisplay.appendChild(date2);
     var container = document.querySelector('.container');
     container.appendChild(dateDisplay);
     
@@ -122,14 +131,14 @@ export function createSolveButton(grid, cellSize, pieces, timerInterval, todaysD
     solveButton.className = 'solve-button';
 
     solveButton.addEventListener('click', () => {
-        clearInterval(timerInterval);
         var uncoveredCells = findUncoveredCells(grid, cellSize, pieces);
-        createPopup();
-        // if (findDateMatch(uncoveredCells, todaysDate)){
-        //     createPopup();
-        // } else {
-        //     createErrorMessage();
-        // };
+        //createPopup();
+        if (findDateMatch(uncoveredCells, todaysDate)){
+            clearInterval(timerInterval);
+            createPopup();
+        } else {
+            createErrorMessage();
+        };
     });
 
     var container = document.querySelector('.container');

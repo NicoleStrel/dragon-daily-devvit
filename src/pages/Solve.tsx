@@ -1,85 +1,36 @@
-import { Devvit, useState} from '@devvit/public-api';
-import {Page} from '../types/Page.js';
-import {WebViewMessage} from '../types/WebViewMessage.js';
-
+import { Devvit, RedisClient} from '@devvit/public-api';
+import { Page } from '../types/Page.js';
+import { WebViewMessage } from '../types/WebViewMessage.js';
+import { setUserScore } from '../utils/redis.js';
+import { timeToSeconds } from '../utils/time.js';
 export interface SolvePageProps {
     setPage: (page: Page) => void;
+    userName: string;
+    redis: RedisClient;
 }
 export const Solve = (props: SolvePageProps): JSX.Element => {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const { setPage } = props;
-  // const showPuzzlePeices = (startIndex: number) => {
-  //   return Array.from({ length: 5 }, (_, i) => i + startIndex).map((i) => {
-  //       if (selectedIndex == i){
-  //           console.log("Selected Index: " + selectedIndex);
-  //       }
-  //       return (
-  //       <>
-  //           <PuzzlePiece 
-  //               blocksize={30} 
-  //               index={i}
-  //               onMouseDown={() => console.log("hi")} //setSelectedIndex(i)
-  //               onMouseUp={() => setSelectedIndex(null)}
-  //           />
-  //           <spacer size="small" />
-  //       </>)
-  //   });
-  // }
+  const { setPage, userName, redis } = props;
 
   const onMessage = async (msg: WebViewMessage) => {
     console.log('Message received', msg);
+    switch (msg.type) {
+      case 'result':
+        console.log(`Time taken: ${msg.data.timeStr}`);
+        await setUserScore(userName, timeToSeconds(msg.data.timeStr), redis)
+        setPage('home')
+        break;
+      default:
+        console.error('Unknown message type', msg);
+    }
   }
 
   return (
-
     <webview
         id="myWebView"
         url="page.html"
-        onMessage={(msg) => console.log(msg)}
+        onMessage={(msg) => onMessage(msg as WebViewMessage)}
         grow
         height='100%'
       />
-
-    // <zstack height="100%" width="100%">
-    // <vstack grow height='100%'>
-    //       <vstack border="thick" borderColor="black" height='100%'>
-    //         <webview
-    //           id="myWebView"
-    //           url="page.html"
-    //           onMessage={(msg) => onMessage(msg as WebViewMessage)}
-    //           grow
-    //           height='100%'
-    //         />
-    //       </vstack>
-    //   </vstack>
-    // </zstack>
-    // <zstack height="100%" width="100%">
-    //     <hstack gap="medium" padding="medium">
-    //         <vstack alignment="top left" grow>
-    //             <text>Solve</text>
-    //             <button icon="close" onPress={() => setPage('home')} />
-    //         </vstack>
-    //         {/* </vstack>
-    //         <spacer grow />
-    //         <vstack alignment="top right" grow>
-    //             {showPuzzlePeices(1)}
-    //         </vstack>
-    //         <vstack alignment="top right" grow>
-    //             {showPuzzlePeices(6)}
-    //         </vstack> */}
-    //         <vstack grow height='100%'>
-    //           <vstack height='100%'>
-    //             <webview
-    //                 id="myWebView"
-    //                 url="page.html"
-    //                 onMessage={(msg) => onMessage(msg as WebViewMessage)}
-    //                 grow
-    //                 height='100%'
-    //                 width='100%'
-    //               />
-    //           </vstack>
-    //         </vstack>
-    //     </hstack>
-    // </zstack>
   );
 };

@@ -1,4 +1,5 @@
 import { Devvit } from '@devvit/public-api';
+import {LoadingComponent} from './components/LoadingComponent.js';
 
 // Configure Devvit's plugins
 Devvit.configure({
@@ -19,7 +20,7 @@ Devvit.addMenuItem({
       // The preview appears while the post loads
       preview: (
         <vstack height="100%" width="100%" alignment="middle center">
-          <text size="large">Loading ...</text>
+          <LoadingComponent />
         </vstack>
       ),
     });

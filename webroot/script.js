@@ -3,42 +3,8 @@ import {createGrid} from './components/Grid.js';
 import {createSolveButton, createTimer, createDate} from './components/Solver.js';
 
 class App {
-  
-  constructor() {
-
-    // When the Devvit app sends a message with `context.ui.webView.postMessage`, this will be triggered
-    window.addEventListener('message', (ev) => {
-      const { type, data } = ev.data;
-
-      // Reserved type for messages sent via `context.ui.webView.postMessage`
-      if (type === 'devvit-message') {
-        const { message } = data;
-
-        // Always output full message
-        output.replaceChildren(JSON.stringify(message, undefined, 2));
-
-        // Load initial data
-        if (message.type === 'initialData') {
-          const { username, currentCounter } = message.data;
-          usernameLabel.innerText = username;
-          counterLabel.innerText = counter = currentCounter;
-        }
-
-        // Update counter
-        if (message.type === 'updateCounter') {
-          const { currentCounter } = message.data;
-          counterLabel.innerText = counter = currentCounter;
-        }
-      }
-    });
-
-
-  }
-
   start() {
-
-    console.log("HELLOOOO");
-    var initialPeiceSize = 30;
+    var initialPeiceSize = 25;
     var pieces = []
     for (let i = 1; i <= 10; i++) {
       pieces.push(createPuzzlePiece(i, initialPeiceSize));
@@ -46,8 +12,6 @@ class App {
     // Initialize grid
     var gridwidth = 55;
     var grid = createGrid(gridwidth);
-
-    //
 
     // Place pieces on grid
     let draggedElementIndex = null;
