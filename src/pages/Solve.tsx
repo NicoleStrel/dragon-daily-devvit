@@ -1,13 +1,10 @@
-import { Devvit, RedisClient} from '@devvit/public-api';
-import { Page, WebViewMessage} from '../types/types.js';
+import { Devvit} from '@devvit/public-api';
+import { WebViewMessage} from '../types/types.js';
 import { setUserScore } from '../utils/redis.js';
 import { timeToSeconds } from '../utils/time.js';
-export interface SolvePageProps {
-    setPage: (page: Page) => void;
-    userName: string;
-    redis: RedisClient;
-}
-export const Solve = (props: SolvePageProps): JSX.Element => {
+import { PageProps } from '../types/types.js';
+
+export const Solve = (props: PageProps): JSX.Element => {
   const { setPage, userName, redis } = props;
 
   const onMessage = async (msg: WebViewMessage) => {

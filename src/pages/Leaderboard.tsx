@@ -1,15 +1,10 @@
-import { Devvit, useAsync, RedisClient} from '@devvit/public-api';
-import {Page} from '../types/types.js';
+import { Devvit, useAsync} from '@devvit/public-api';
 import { getScores } from '../utils/redis.js';
 import { secondsToTime } from '../utils/time.js';
 import { LoadingComponent } from '../components/LoadingComponent.js';
+import {PageProps} from '../types/types.js';
 
-export interface LeaderboardPageProps {
-    setPage: (page: Page) => void;
-    userName: string;
-    redis: RedisClient;
-}
-export const Leaderboard = (props: LeaderboardPageProps): JSX.Element => {
+export const Leaderboard = (props: PageProps): JSX.Element => {
   const { setPage, userName, redis } = props;
   const { data: data, loading, error } = useAsync(async () => await getScores(userName, 5, redis));
   

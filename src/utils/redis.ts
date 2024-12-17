@@ -7,7 +7,7 @@ const scoreKey: string = `${utcDate}:cache:score`
 
 export async function getUserScore(userName: string | null, redis: RedisClient): Promise<number> {
     const defaultValue = -1;
-    if (!userName) return defaultValue;
+    if (!userName || userName == defaultUser) return defaultValue;
     const score = await redis.zScore(scoreKey, userName);
     return score || defaultValue;
 }
@@ -24,9 +24,7 @@ export async function getScores(userName: string, maxLength: number = 10, redis:
     try {
         const options: ZRangeOptions = { reverse: false, by: 'rank' };
         scores =  await redis.zRange(scoreKey, 0, maxLength - 1, options);
-        if (userName != defaultUser){
-            userScore =  await getUserScore(userName, redis);
-        }
+        userScore =  await getUserScore(userName, redis);
     } catch (error) {
         if (error) {
           console.error('Error fetching Leaderboard', error);

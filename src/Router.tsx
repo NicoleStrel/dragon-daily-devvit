@@ -4,6 +4,7 @@ import {Page} from './types/types.js';
 import {Solve} from './pages/Solve.js';
 import {Leaderboard} from './pages/Leaderboard.js';
 import type { Context } from '@devvit/public-api';
+import { LoadingComponent } from './components/LoadingComponent.js';
 
 export const defaultUser = 'anon';
 
@@ -33,11 +34,11 @@ export const Router = (context: Context): JSX.Element => {
     return defaultUser;
   };
   
-  const { data: userName } = useAsync(async () => await getUsername());
+  const { data: userName, loading, error } = useAsync(async () => await getUsername());
 
-  const findPage = () => {
+  const findPage = (userName: string) => {
     if (page === 'home') {
-        return <Home setPage={setPage}/>
+        return <Home setPage={setPage} userName={userName || defaultUser} redis={context.redis}/>
     } else if (page === 'solve') {
         return <Solve setPage={setPage} userName={userName || defaultUser} redis={context.redis}/>
     } else if (page === 'leaderboard') {
@@ -47,7 +48,9 @@ export const Router = (context: Context): JSX.Element => {
   return (
     page === 'solve' ? (
         <blocks>
-        {findPage()}
+        {loading && <LoadingComponent/>}
+        {error && <text>Error fetching data</text>}
+        {!loading && !error && userName && findPage()}
         </blocks>
     ) : (
         <zstack width="100%" height="100%" alignment="top start">
@@ -60,7 +63,9 @@ export const Router = (context: Context): JSX.Element => {
                 description="Gradient background"
                 resizeMode="cover"
             />
-            {findPage()}
+            {loading && <LoadingComponent/>}
+            {error && <text>Error fetching data</text>}
+            {!loading && !error && userName && findPage(userName)}
         </zstack>
     )
   );
