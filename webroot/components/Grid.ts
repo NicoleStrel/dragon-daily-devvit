@@ -1,9 +1,9 @@
 
 
-export const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-export const nums = Array.from({length: 31}, (_, i) => (i + 1).toString());
-export const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const gridLabels = [
+export const months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export const nums: string[] = Array.from({length: 31}, (_, i) => (i + 1).toString());
+export const days: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const gridLabels: string[] = [
     ...months.slice(0, 6),    // First 6 months
     "",                       // Empty separator
     ...months.slice(6),       // Last 6 months
@@ -14,10 +14,12 @@ const gridLabels = [
     ...days.slice(4)         // Last 3 days
 ];
 
-export function createGrid(cellSize) {
+export function createGrid(cellSize: number) {
     let rows = 8;
     let cols = 7;
     const grid = document.getElementById('grid');
+    if (!grid){ return null;}
+    
     grid.style.width = `${cols * cellSize}px`;
     grid.style.height = `${rows * cellSize}px`;
     grid.style.position = 'relative';

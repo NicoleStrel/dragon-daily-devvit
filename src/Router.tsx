@@ -1,6 +1,6 @@
 import { Devvit, useState, useAsync} from '@devvit/public-api';
 import {Home} from './pages/Home.js';
-import {Page} from './types/Page.js';
+import {Page} from './types/types.js';
 import {Solve} from './pages/Solve.js';
 import {Leaderboard} from './pages/Leaderboard.js';
 import type { Context } from '@devvit/public-api';
@@ -33,15 +33,15 @@ export const Router = (context: Context): JSX.Element => {
     return defaultUser;
   };
   
-  const { data: userName, loading, error } = useAsync(async () => await getUsername());
+  const { data: userName } = useAsync(async () => await getUsername());
 
   const findPage = () => {
     if (page === 'home') {
         return <Home setPage={setPage}/>
     } else if (page === 'solve') {
-        return <Solve setPage={setPage} userName={userName} redis={context.redis}/>
+        return <Solve setPage={setPage} userName={userName || defaultUser} redis={context.redis}/>
     } else if (page === 'leaderboard') {
-        return <Leaderboard setPage={setPage} userName={userName} redis={context.redis}/>
+        return <Leaderboard setPage={setPage} userName={userName || defaultUser} redis={context.redis}/>
     }
   }
   return (

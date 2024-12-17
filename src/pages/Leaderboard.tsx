@@ -1,5 +1,5 @@
 import { Devvit, useAsync, RedisClient} from '@devvit/public-api';
-import {Page} from '../types/Page.js';
+import {Page} from '../types/types.js';
 import { getScores } from '../utils/redis.js';
 import { secondsToTime } from '../utils/time.js';
 import { LoadingComponent } from '../components/LoadingComponent.js';
@@ -15,10 +15,6 @@ export const Leaderboard = (props: LeaderboardPageProps): JSX.Element => {
   
   return (
     <vstack height="100%" width="100%" alignment="center" padding="medium" gap="medium">
-        {/* <vstack width="100%" alignment="center middle">
-          <text size="xlarge">Leaderboard</text>
-        </vstack> */}
-
         <hstack width="100%" alignment="middle">
           <spacer width="24px" />
             <text size="xxlarge">Today's Leaderboard</text>
@@ -32,9 +28,11 @@ export const Leaderboard = (props: LeaderboardPageProps): JSX.Element => {
         {!loading && !error && data && (
           <vstack gap="small" width="100%" height="100%" grow>
             {data.scores.length === 0 ? (
-              <text>No scores on the leaderboard!</text>
+              <hstack width="100%" alignment="center middle">
+                <text>No scores on the leaderboard!</text>
+              </hstack>
             ) : (
-              data.scores.map((entry, index) => ( //#EAEDEF alignment="center middle"
+              data.scores.map((entry, index) => (
                 <vstack>
                   <hstack key={`${index}`} backgroundColor="white" padding="medium" cornerRadius="medium" width="100%" alignment="center middle" grow>
                       <spacer size="medium"/>

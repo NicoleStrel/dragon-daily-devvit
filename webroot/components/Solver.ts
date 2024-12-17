@@ -1,15 +1,11 @@
 import { days, months } from "./Grid.js";
 
-function findUncoveredCells(grid, cellSize, pieces) {
-    const uncoveredCells = [];
-
-    const gridRect = grid.getBoundingClientRect();
+function findUncoveredCells(grid: HTMLElement, cellSize: number, pieces: HTMLElement[]) {
+    const uncoveredCells: string[] = [];
     const cells = grid.querySelectorAll('div');
 
     cells.forEach((cell) => {
         const cellRect = cell.getBoundingClientRect();
-        const cellCenterX = cellRect.left + cellRect.width / 2;
-        const cellCenterY = cellRect.top + cellRect.height / 2;
         let isCovered = false;
 
         pieces.forEach((piece) => {
@@ -28,17 +24,14 @@ function findUncoveredCells(grid, cellSize, pieces) {
             });
         });
 
-        if (!isCovered && cell.textContent != '') {
+        if (!isCovered && cell.textContent && cell.textContent != '') {
             uncoveredCells.push(cell.textContent);
         }
     });
-
-    console.log('Uncovered cells:', uncoveredCells);
     return uncoveredCells;
 }
 
-function findDateMatch(uncoveredCells, todaysDate) {
-    console.log("Today's Date: ", todaysDate)
+function findDateMatch(uncoveredCells: string[], todaysDate: string[]) {
     if (!uncoveredCells || !todaysDate || uncoveredCells.length !== todaysDate.length) {
         return false;
     }
@@ -48,23 +41,28 @@ function findDateMatch(uncoveredCells, todaysDate) {
 }
 
 function createPopup() {
-    var time =  document.getElementById('timer').textContent
+    const timer = document.getElementById('timer');
     const popup = document.getElementById('solvePopup');
     const timeDisplay = document.getElementById('solveTime');
+    if (!timer || !popup || !timeDisplay) { return; }
+    var time =  timer.textContent
     timeDisplay.textContent = `Time: ${time}`;
     popup.style.display = 'flex';
 
     const closeButton = popup.querySelector('.close-button');
-    closeButton.addEventListener('click', () => {
-        window.parent?.postMessage(
-            { type: 'result', data: { timeStr: time } },
-            '*'
-          );
-    });
+    if (closeButton){
+        closeButton.addEventListener('click', () => {
+            window.parent?.postMessage(
+                { type: 'result', data: { timeStr: time } },
+                '*'
+            );
+        });
+    }
 }
 
 function createErrorMessage() {
     const solveButton = document.querySelector('.solve-button');
+    if (!solveButton) { return; }
     const buttonRect = solveButton.getBoundingClientRect();
     
     const errorMessage = document.createElement('div');
@@ -73,6 +71,7 @@ function createErrorMessage() {
     errorMessage.style.top = `${buttonRect.top - 30}px`;
     
     var container = document.querySelector('.container');
+    if (!container) { return; }
     container.appendChild(errorMessage);
     
     requestAnimationFrame(() => errorMessage.classList.add('show'));
@@ -86,10 +85,14 @@ function createErrorMessage() {
 export function createTimer() {
     let startTime = Date.now();
     const timer = document.getElementById('timer');
+    if (!timer) { return null; }
+    const svgTime = timer.querySelector('svg');
+    if (!svgTime) { return null; }
+
     const timerText = document.createElement('p');
     timerText.textContent = '00:00';
     timer.appendChild(timerText);
-    const svgTime = timer.querySelector('svg');
+    
     svgTime.style.display = 'block';
     const updateTimer = () => {
         const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
@@ -107,7 +110,7 @@ export function createDate(){
     const dayName = today.toLocaleString('default', { weekday: 'long', timeZone: 'UTC' });
     const monthName = today.toLocaleString('default', { month: 'long', timeZone: 'UTC' });
     const dayNum = today.getUTCDate();
-    const ordinalSuffix = (n) => ['th', 'st', 'nd', 'rd'][(n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10];
+    const ordinalSuffix = (n: number): string => ['th', 'st', 'nd', 'rd'][(n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10];
     const formattedDate = `${dayName}, ${monthName} ${dayNum}${ordinalSuffix(dayNum)} (UTC)`;
 
     const dateDisplay = document.createElement('div');
@@ -119,20 +122,21 @@ export function createDate(){
     dateDisplay.appendChild(date1);
     dateDisplay.appendChild(date2);
     var container = document.querySelector('.container');
-    container.appendChild(dateDisplay);
+    if (container){
+        container.appendChild(dateDisplay);
+    }
     
     const todaysDate = [months[today.getUTCMonth()], dayNum.toString(), days[today.getUTCDay()]]
     return todaysDate;
 }
 
-export function createSolveButton(grid, cellSize, pieces, timerInterval, todaysDate){
+export function createSolveButton(grid: HTMLElement, cellSize: number, pieces: HTMLElement[], timerInterval: number, todaysDate: string[]) {
     const solveButton = document.createElement('button');
     solveButton.textContent = 'Submit';
     solveButton.className = 'solve-button';
 
     solveButton.addEventListener('click', () => {
         var uncoveredCells = findUncoveredCells(grid, cellSize, pieces);
-        //createPopup();
         if (findDateMatch(uncoveredCells, todaysDate)){
             clearInterval(timerInterval);
             createPopup();
@@ -142,5 +146,7 @@ export function createSolveButton(grid, cellSize, pieces, timerInterval, todaysD
     });
 
     var container = document.querySelector('.container');
-    container.appendChild(solveButton);
+    if (container){
+        container.appendChild(solveButton);
+    }
 }

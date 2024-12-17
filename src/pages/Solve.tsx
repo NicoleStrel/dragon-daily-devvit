@@ -1,6 +1,5 @@
 import { Devvit, RedisClient} from '@devvit/public-api';
-import { Page } from '../types/Page.js';
-import { WebViewMessage } from '../types/WebViewMessage.js';
+import { Page, WebViewMessage} from '../types/types.js';
 import { setUserScore } from '../utils/redis.js';
 import { timeToSeconds } from '../utils/time.js';
 export interface SolvePageProps {
@@ -12,10 +11,8 @@ export const Solve = (props: SolvePageProps): JSX.Element => {
   const { setPage, userName, redis } = props;
 
   const onMessage = async (msg: WebViewMessage) => {
-    console.log('Message received', msg);
     switch (msg.type) {
       case 'result':
-        console.log(`Time taken: ${msg.data.timeStr}`);
         await setUserScore(userName, timeToSeconds(msg.data.timeStr), redis)
         setPage('home')
         break;

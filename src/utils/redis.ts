@@ -1,5 +1,5 @@
 import type {RedisClient, ZRangeOptions,} from '@devvit/public-api';
-import type {ScoreEntry} from '../types/ScoreEntry.js';
+import type {ScoreEntry} from '../types/types.js';
 import { defaultUser } from '../Router.js';
 
 const utcDate = new Date().toISOString().split('T')[0];

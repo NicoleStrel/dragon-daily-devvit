@@ -1,4 +1,14 @@
-const puzzlePiecesPaths = {
+
+type PuzzlePieceDict = {
+    width: string;
+    height: string;
+    svg: string;
+}
+
+type PuzzlePiecePaths = {
+    [key: number]: PuzzlePieceDict;
+};
+const puzzlePiecesPaths: PuzzlePiecePaths = {
     1: { // z shape
         width: `{blocksize*3}`,
         height: `{blocksize*2}`,
@@ -81,13 +91,13 @@ const puzzlePiecesPaths = {
     }
 }
 
-function transformTemplate(template, blocksize){
+function transformTemplate(template: string, blocksize: number){
     return template.replace(/{blocksize(\*(\d+))?}/g, (_, __, multiplier) => 
         multiplier ? String(blocksize * Number(multiplier)) : String(blocksize)
     );
 }
 
-function convertPuzzlePiece(puzzlePiece, blocksize){
+function convertPuzzlePiece(puzzlePiece: PuzzlePieceDict, blocksize: number){
     return {
         width: transformTemplate(puzzlePiece.width, blocksize),
         height: transformTemplate(puzzlePiece.height, blocksize),
@@ -95,7 +105,7 @@ function convertPuzzlePiece(puzzlePiece, blocksize){
     }
 }
 
-function createSVG(width, height, puzzleSvg){
+function createSVG(width: string, height: string, puzzleSvg: string){
     const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svgElement.setAttribute('width', width);
     svgElement.setAttribute('height', height);
@@ -104,8 +114,8 @@ function createSVG(width, height, puzzleSvg){
     return svgElement;
 }
 
-export function changePuzzlePieceSize(index, piece, blocksize){
-    const rotation = parseInt(piece.getAttribute('data-rotation') || 0);
+export function changePuzzlePieceSize(index: number, piece: HTMLElement, blocksize: number){
+    const rotation = parseInt(piece.getAttribute('data-rotation') || '0', 0);
     const isFlipped = piece.getAttribute('data-flipped') === 'true';
 
     const puzzlePiece = convertPuzzlePiece(puzzlePiecesPaths[index], blocksize);
@@ -117,6 +127,7 @@ export function changePuzzlePieceSize(index, piece, blocksize){
     piece.style.height = height + 'px';
 
     const svgElement = piece.querySelector('svg');
+    if (!svgElement) { return;}
     svgElement.setAttribute('width', width);
     svgElement.setAttribute('height', height);
     svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
@@ -125,13 +136,12 @@ export function changePuzzlePieceSize(index, piece, blocksize){
     piece.style.transform = `rotate(${rotation}deg) scaleX(${isFlipped ? -1 : 1})`; // Restore transform
 }
 
-export function createPuzzlePiece(index, blocksize) {
+export function createPuzzlePiece(index: number, blocksize: number) {
     const puzzlePiece = convertPuzzlePiece(puzzlePiecesPaths[index], blocksize);
     const width = puzzlePiece.width;
     const height = puzzlePiece.height;
     const puzzleSvg = puzzlePiece.svg;
 
-    // Create wrapper div
     const wrapperDiv = document.createElement('div');
     wrapperDiv.style.position = 'relative';
     wrapperDiv.style.width = width + 'px';
@@ -141,7 +151,8 @@ export function createPuzzlePiece(index, blocksize) {
     wrapperDiv.appendChild(createSVG(width, height, puzzleSvg));
     
     const contentDiv = document.getElementById('peices');
-    contentDiv.appendChild(wrapperDiv);
-
+    if (contentDiv) {
+        contentDiv.appendChild(wrapperDiv);
+    }
     return wrapperDiv;
 }

@@ -1,6 +1,6 @@
 import { Devvit} from '@devvit/public-api';
 import {DateComponent} from '../components/DateComponent.js';
-import {Page} from '../types/Page.js';
+import {Page} from '../types/types.js';
 
 export interface HomePageProps {
     setPage: (page: Page) => void;
