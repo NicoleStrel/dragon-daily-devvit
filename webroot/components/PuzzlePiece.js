@@ -18,7 +18,7 @@ const puzzlePiecesPaths = {
 <rect y="{blocksize*2}" width="{blocksize}" height="{blocksize}" fill="#94CF7B" fill-opacity="0.26"/>
 <rect x="{blocksize}" y="{blocksize*2}" width="{blocksize}" height="{blocksize}" fill="#94CF7B" fill-opacity="0.26"/>`
     },
-    4 : {
+    4 : { 
         width: `{blocksize*4}`,
         height: `{blocksize*2}`,
         svg: `<rect x="{blocksize}" width="{blocksize}" height="{blocksize}" fill="#F2196C" fill-opacity="0.26"/>
@@ -27,7 +27,7 @@ const puzzlePiecesPaths = {
 <rect x="{blocksize*3}" width="{blocksize}" height="{blocksize}" fill="#F2196C" fill-opacity="0.26"/>
 <rect x="{blocksize*3}" y="{blocksize}" width="{blocksize}" height="{blocksize}" fill="#F2196C" fill-opacity="0.26"/>`
     },
-    5 : {
+    5 : { // long
         width: `{blocksize}`,
         height: `{blocksize*4}`,
         svg: `<rect y="{blocksize*3}" width="{blocksize}" height="{blocksize}" fill="#94CF7B" fill-opacity="0.26"/>

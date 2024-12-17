@@ -33,11 +33,9 @@ class App {
       var isFlipped = false;
       if (piece.hasAttribute('data-rotation')) {
         rotation = parseInt(piece.getAttribute('data-rotation') || '0');
-        console.log("FOUND ROTATION", rotation);  
       }
       if (piece.hasAttribute('data-flipped')) {
         isFlipped = piece.getAttribute('data-flipped') === 'true';
-        console.log("FOUND isFlipped", isFlipped);  
       }
 
       const rotateIcon = document.createElement('div');
@@ -52,16 +50,16 @@ class App {
       rotateIcon.addEventListener('click', (e) => {
         e.stopPropagation(); // Prevent piece drag
         rotation = (rotation + 90) % 360;
-        piece.style.transform = `rotate(${rotation}deg)`;
+        piece.style.transform = `rotate(${rotation}deg) scaleX(${isFlipped ? -1 : 1})`;
+        piece.setAttribute('data-rotation', rotation.toString());
       });
       flipIcon.addEventListener('click', (e) => {
         e.stopPropagation();
         isFlipped = !isFlipped;
         piece.style.transform = `rotate(${rotation}deg) scaleX(${isFlipped ? -1 : 1})`;
+        piece.setAttribute('data-flipped', isFlipped.toString());
       });
       
-      piece.setAttribute('data-rotation', rotation.toString());
-      piece.setAttribute('data-flipped', isFlipped.toString());
       piece.setAttribute('data-has-icons', 'true');
     }
 
@@ -80,8 +78,17 @@ class App {
 
         const handleMouseMove = (moveEvent) => {
           if (index === draggedElementIndex) {
-              const x = moveEvent.clientX - offsetX;
-              const y = moveEvent.clientY - offsetY;
+              const rotation = parseInt(piece.getAttribute('data-rotation') || '0');
+              let x, y;
+              if (rotation === 90 || rotation === 270) {
+                  const rotatedOffsetX = rect.height - offsetY;
+                  const rotatedOffsetY = offsetX; 
+                  x = moveEvent.clientX - rotatedOffsetX;
+                  y = moveEvent.clientY - rotatedOffsetY;
+              } else {
+                  x = moveEvent.clientX - offsetX;
+                  y = moveEvent.clientY - offsetY;
+              }
               piece.style.position = 'absolute';
               piece.style.left = `${x}px`;
               piece.style.top = `${y}px`;
