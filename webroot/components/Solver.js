@@ -51,7 +51,6 @@ function createPopup() {
 
     const closeButton = popup.querySelector('.close-button');
     if (closeButton){
-        console.log("SENDING THE MESSAGEEEE")
         closeButton.addEventListener('click', () => {
             window.parent?.postMessage(
                 { type: 'result', data: { timeStr: time } },
@@ -137,16 +136,13 @@ export function createSolveButton(grid, cellSize, pieces, timerInterval, todaysD
     solveButton.className = 'solve-button';
 
     solveButton.addEventListener('click', () => {
-        console.log("HELLOOOOOOO")
         var uncoveredCells = findUncoveredCells(grid, cellSize, pieces);
-        clearInterval(timerInterval);
-        createPopup();
-        // if (findDateMatch(uncoveredCells, todaysDate)){
-        //     clearInterval(timerInterval);
-        //     createPopup();
-        // } else {
-        //     createErrorMessage();
-        // };
+        if (findDateMatch(uncoveredCells, todaysDate)){
+            clearInterval(timerInterval);
+            createPopup();
+        } else {
+            createErrorMessage();
+        };
     });
 
     var container = document.querySelector('.container');

@@ -23,7 +23,7 @@ export async function getScores(userName: string, maxLength: number = 10, redis:
     var scores: ScoreEntry[] = [];
     try {
         const options: ZRangeOptions = { reverse: false, by: 'rank' };
-        scores =  await redis.zRange(scoreKey, 0, maxLength, options);
+        scores =  await redis.zRange(scoreKey, 0, maxLength - 1, options);
         userScore =  await getUserScore(userName, redis);
     } catch (error) {
         if (error) {
