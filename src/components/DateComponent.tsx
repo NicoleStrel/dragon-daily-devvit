@@ -13,12 +13,12 @@ export const DateComponent = (): JSX.Element => {
 
     const getFormattedDate = () => {
         const today = new Date();
-        const dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
-        const month = today.toLocaleString('en-US', { month: 'long' });
-        const day = today.getDate();
+        const dayOfWeek = today.toLocaleString('en-US', { weekday: 'long', timeZone: 'UTC' });
+        const month = today.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+        const day = today.getUTCDate();
         const suffix = getDaySuffix(day);
 
-        return `${dayOfWeek}, ${month} ${day}${suffix}`;
+        return `${dayOfWeek}, ${month} ${day}${suffix} (UTC)`;
     };
 
     const [date, setDate] = useState(() => getFormattedDate());

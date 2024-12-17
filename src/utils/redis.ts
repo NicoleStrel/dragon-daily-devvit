@@ -2,7 +2,8 @@ import type {RedisClient, ZRangeOptions,} from '@devvit/public-api';
 import type {ScoreEntry} from '../types/ScoreEntry.js';
 import { defaultUser } from '../Router.js';
 
-const scoreKey: string = 'cache:score'
+const utcDate = new Date().toISOString().split('T')[0];
+const scoreKey: string = `${utcDate}:cache:score`
 
 export async function getUserScore(userName: string | null, redis: RedisClient): Promise<number> {
     const defaultValue = -1;

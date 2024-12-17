@@ -104,11 +104,11 @@ export function createTimer() {
 
 export function createDate(){
     const today = new Date();
-    const dayName = today.toLocaleString('default', { weekday: 'long' });
-    const monthName = today.toLocaleString('default', { month: 'long' });
-    const dayNum = today.getDate();
+    const dayName = today.toLocaleString('default', { weekday: 'long', timeZone: 'UTC' });
+    const monthName = today.toLocaleString('default', { month: 'long', timeZone: 'UTC' });
+    const dayNum = today.getUTCDate();
     const ordinalSuffix = (n) => ['th', 'st', 'nd', 'rd'][(n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10];
-    const formattedDate = `${dayName}, ${monthName} ${dayNum}${ordinalSuffix(dayNum)}`;
+    const formattedDate = `${dayName}, ${monthName} ${dayNum}${ordinalSuffix(dayNum)} (UTC)`;
 
     const dateDisplay = document.createElement('div');
     dateDisplay.id = 'date';
@@ -121,7 +121,7 @@ export function createDate(){
     var container = document.querySelector('.container');
     container.appendChild(dateDisplay);
     
-    const todaysDate = [months[today.getMonth()], dayNum.toString(), days[today.getDay()]]
+    const todaysDate = [months[today.getUTCMonth()], dayNum.toString(), days[today.getUTCDay()]]
     return todaysDate;
 }
 
