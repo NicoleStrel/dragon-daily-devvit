@@ -4,24 +4,24 @@ import { createSolveButton, createTimer, createDate } from './Solver.js';
 import { addPuzzleListeners } from './PuzzleListeners.js';
 
 class App {
-  async start(): Promise<void> {
-    const initialPeiceSize: number = 25;
-    const gridwidth: number = 55;
-    const pieces: HTMLElement[] = [];
+  async start() {
+    const initialPeiceSize = 25;
+    const gridwidth = 55;
+    const pieces = [];
 
     // initialize pieces
-    for (let i: number = 1; i <= 10; i++) {
+    for (let i = 1; i <= 10; i++) {
       pieces.push(createPuzzlePiece(i, initialPeiceSize));
     }
     addPuzzleListeners(pieces, gridwidth);
 
     // Initialize grid
-    const grid: HTMLElement | null = createGrid(gridwidth);
+    const grid = createGrid(gridwidth);
 
     if (grid !== null) {
       // Initialize timer, date, and solve button
-      const todaysDate: string[] = createDate();
-      const timerInterval: number | null = createTimer();
+      const todaysDate = createDate();
+      const timerInterval = createTimer();
       if (timerInterval) {
         createSolveButton(grid, gridwidth, pieces, timerInterval, todaysDate);
       }
@@ -29,5 +29,5 @@ class App {
   }
 }
 
-const app: App = new App();
+const app = new App();
 await app.start();

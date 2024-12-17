@@ -1,7 +1,7 @@
 
 import { changePuzzlePieceSize } from './PuzzlePiece.js';
 
-function cleanupPiece(piece: HTMLElement) {
+function cleanupPiece(piece) {
     const rotateIcon = piece.querySelector('.rotate-icon');
     const flipIcon = piece.querySelector('.flip-icon');
     if (rotateIcon) piece.removeChild(rotateIcon);
@@ -9,7 +9,7 @@ function cleanupPiece(piece: HTMLElement) {
     piece.setAttribute('data-has-icons', 'false');
   }
 
-function addIcons(piece: HTMLElement) {
+function addIcons(piece) {
     // ignore if icons already added
     if (piece.hasAttribute('data-has-icons') && piece.getAttribute('data-has-icons') === 'true') return;
     
@@ -48,9 +48,9 @@ function addIcons(piece: HTMLElement) {
   }
 
 
-export function addPuzzleListeners(pieces: HTMLElement[], gridwidth: number){
-    let draggedElementIndex: number | null = null;
-    let offsetX: number, offsetY: number;
+export function addPuzzleListeners(pieces, gridwidth){
+    let draggedElementIndex = null;
+    let offsetX, offsetY;
 
     pieces.forEach((piece, index) => {
         piece.addEventListener('mousedown', (e) => {
@@ -65,7 +65,7 @@ export function addPuzzleListeners(pieces: HTMLElement[], gridwidth: number){
           offsetX = e.clientX - rect.left;
           offsetY = e.clientY - rect.top;
   
-          const handleMouseMove = (moveEvent: MouseEvent) => {
+          const handleMouseMove = (moveEvent) => {
             if (index === draggedElementIndex) {
                 const rotation = parseInt(piece.getAttribute('data-rotation') || '0');
                 let x, y;
@@ -97,12 +97,9 @@ export function addPuzzleListeners(pieces: HTMLElement[], gridwidth: number){
   
   
       // Handle clicking outside (unclick)
-      document.addEventListener('click', (e: MouseEvent) => {
-        const targetNode = e.target;
-        if (!(targetNode instanceof Node)) return;
-
+      document.addEventListener('click', (e) => {
         for (const piece of pieces) {
-          if (!piece.contains(targetNode)) {
+          if (!piece.contains(e.target)) {
               cleanupPiece(piece);
           }
         }

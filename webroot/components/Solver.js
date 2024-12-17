@@ -1,7 +1,7 @@
 import { days, months } from "./Grid.js";
 
-function findUncoveredCells(grid: HTMLElement, cellSize: number, pieces: HTMLElement[]) {
-    const uncoveredCells: string[] = [];
+function findUncoveredCells(grid, cellSize, pieces) {
+    const uncoveredCells = [];
     const cells = grid.querySelectorAll('div');
 
     cells.forEach((cell) => {
@@ -31,7 +31,7 @@ function findUncoveredCells(grid: HTMLElement, cellSize: number, pieces: HTMLEle
     return uncoveredCells;
 }
 
-function findDateMatch(uncoveredCells: string[], todaysDate: string[]) {
+function findDateMatch(uncoveredCells, todaysDate) {
     if (!uncoveredCells || !todaysDate || uncoveredCells.length !== todaysDate.length) {
         return false;
     }
@@ -51,6 +51,7 @@ function createPopup() {
 
     const closeButton = popup.querySelector('.close-button');
     if (closeButton){
+        console.log("SENDING THE MESSAGEEEE")
         closeButton.addEventListener('click', () => {
             window.parent?.postMessage(
                 { type: 'result', data: { timeStr: time } },
@@ -110,7 +111,7 @@ export function createDate(){
     const dayName = today.toLocaleString('default', { weekday: 'long', timeZone: 'UTC' });
     const monthName = today.toLocaleString('default', { month: 'long', timeZone: 'UTC' });
     const dayNum = today.getUTCDate();
-    const ordinalSuffix = (n: number): string => ['th', 'st', 'nd', 'rd'][(n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10];
+    const ordinalSuffix = (n) => ['th', 'st', 'nd', 'rd'][(n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10];
     const formattedDate = `${dayName}, ${monthName} ${dayNum}${ordinalSuffix(dayNum)} (UTC)`;
 
     const dateDisplay = document.createElement('div');
@@ -130,19 +131,22 @@ export function createDate(){
     return todaysDate;
 }
 
-export function createSolveButton(grid: HTMLElement, cellSize: number, pieces: HTMLElement[], timerInterval: number, todaysDate: string[]) {
+export function createSolveButton(grid, cellSize, pieces, timerInterval, todaysDate) {
     const solveButton = document.createElement('button');
     solveButton.textContent = 'Submit';
     solveButton.className = 'solve-button';
 
     solveButton.addEventListener('click', () => {
+        console.log("HELLOOOOOOO")
         var uncoveredCells = findUncoveredCells(grid, cellSize, pieces);
-        if (findDateMatch(uncoveredCells, todaysDate)){
-            clearInterval(timerInterval);
-            createPopup();
-        } else {
-            createErrorMessage();
-        };
+        clearInterval(timerInterval);
+        createPopup();
+        // if (findDateMatch(uncoveredCells, todaysDate)){
+        //     clearInterval(timerInterval);
+        //     createPopup();
+        // } else {
+        //     createErrorMessage();
+        // };
     });
 
     var container = document.querySelector('.container');

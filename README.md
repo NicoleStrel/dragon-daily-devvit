@@ -1,5 +1,3 @@
-![DragonDaily Logo](assets/DragonDailyLogo.png)
-
 # DragonDaily
 
 **Solve DragonFjord puzzles and compete for the fastest solve time every day!**

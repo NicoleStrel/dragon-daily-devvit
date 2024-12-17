@@ -39,8 +39,6 @@ export const Router = (context: Context): JSX.Element => {
   const findPage = (userName: string) => {
     if (page === 'home') {
         return <Home setPage={setPage} userName={userName || defaultUser} redis={context.redis}/>
-    } else if (page === 'solve') {
-        return <Solve setPage={setPage} userName={userName || defaultUser} redis={context.redis}/>
     } else if (page === 'leaderboard') {
         return <Leaderboard setPage={setPage} userName={userName || defaultUser} redis={context.redis}/>
     }
@@ -50,7 +48,7 @@ export const Router = (context: Context): JSX.Element => {
         <blocks>
         {loading && <LoadingComponent/>}
         {error && <text>Error fetching data</text>}
-        {!loading && !error && userName && findPage()}
+        {!loading && !error && userName && <Solve setPage={setPage} userName={userName || defaultUser} redis={context.redis}/>}
         </blocks>
     ) : (
         <zstack width="100%" height="100%" alignment="top start">

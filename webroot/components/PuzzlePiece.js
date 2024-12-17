@@ -1,14 +1,4 @@
-
-type PuzzlePieceDict = {
-    width: string;
-    height: string;
-    svg: string;
-}
-
-type PuzzlePiecePaths = {
-    [key: number]: PuzzlePieceDict;
-};
-const puzzlePiecesPaths: PuzzlePiecePaths = {
+const puzzlePiecesPaths = {
     1: { // z shape
         width: `{blocksize*3}`,
         height: `{blocksize*2}`,
@@ -91,13 +81,13 @@ const puzzlePiecesPaths: PuzzlePiecePaths = {
     }
 }
 
-function transformTemplate(template: string, blocksize: number){
+function transformTemplate(template, blocksize){
     return template.replace(/{blocksize(\*(\d+))?}/g, (_, __, multiplier) => 
         multiplier ? String(blocksize * Number(multiplier)) : String(blocksize)
     );
 }
 
-function convertPuzzlePiece(puzzlePiece: PuzzlePieceDict, blocksize: number){
+function convertPuzzlePiece(puzzlePiece, blocksize){
     return {
         width: transformTemplate(puzzlePiece.width, blocksize),
         height: transformTemplate(puzzlePiece.height, blocksize),
@@ -105,7 +95,7 @@ function convertPuzzlePiece(puzzlePiece: PuzzlePieceDict, blocksize: number){
     }
 }
 
-function createSVG(width: string, height: string, puzzleSvg: string){
+function createSVG(width, height, puzzleSvg){
     const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svgElement.setAttribute('width', width);
     svgElement.setAttribute('height', height);
@@ -114,7 +104,7 @@ function createSVG(width: string, height: string, puzzleSvg: string){
     return svgElement;
 }
 
-export function changePuzzlePieceSize(index: number, piece: HTMLElement, blocksize: number){
+export function changePuzzlePieceSize(index, piece, blocksize){
     const rotation = parseInt(piece.getAttribute('data-rotation') || '0', 0);
     const isFlipped = piece.getAttribute('data-flipped') === 'true';
 
@@ -136,7 +126,7 @@ export function changePuzzlePieceSize(index: number, piece: HTMLElement, blocksi
     piece.style.transform = `rotate(${rotation}deg) scaleX(${isFlipped ? -1 : 1})`; // Restore transform
 }
 
-export function createPuzzlePiece(index: number, blocksize: number) {
+export function createPuzzlePiece(index, blocksize) {
     const puzzlePiece = convertPuzzlePiece(puzzlePiecesPaths[index], blocksize);
     const width = puzzlePiece.width;
     const height = puzzlePiece.height;
